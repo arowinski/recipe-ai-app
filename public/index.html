@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Recipe Finder</title>
-    <style>
-      body {
-        text-align: center;
-        padding-top: 5rem;
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recipe Finder</title>
+  <style>
+    body {
+      text-align: center;
+      padding-top: 5rem;
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2em;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="recipe-form">
+    <label for="ingredients">Provide a list of ingredients to get a recipe:</label>
+    <textarea name="ingredients" id="ingredients" rows="8" cols="80" required minlength="3"></textarea>
+    <button type="submit">Get Recipe</button>
+  </form>
+
+  <hr />
+  <p id="recipe"></p>
+
+  <script>
+    document.getElementById('recipe-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const dataObject = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch("/api/recipe", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(dataObject)
+        });
+
+        const data = await response.json();
+        document.getElementById('recipe').innerHTML = data.message.replace(/\n/g, "<br>");
+      } catch (error) {
+        document.getElementById('recipe').innerHTML = "Something went wrong. Please try again.";
       }
-      form {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: 2em;
-      }
-    </style>
-  </head>
-  <body>
-    <form id="recipe-form">
-      <label for="ingredients">Provide a list of ingredients to get a recipe:</label>
-      <textarea name="ingredients" id="ingredients" rows="8" cols="80" required minlength="3"></textarea>
-      <button type="submit">Get Recipe</button>
-    </form>
-
-    <hr/>
-    <p id="recipe"></p>
-
-    <script>
-      document.getElementById('recipe-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-        const dataObject = Object.fromEntries(formData.entries());
-
-        try {
-          const response = await fetch("/api/recipe", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataObject)
-          });
-
-          const data = await response.json();
-          document.getElementById('recipe').innerHTML = data.message.replace(/\n/g, "<br>");
-        } catch (error) {
-          document.getElementById('recipe').innerHTML = "Something went wrong. Please try again.";
-        }
-      });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
