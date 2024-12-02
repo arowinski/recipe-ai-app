@@ -3,7 +3,8 @@ require "uri"
 require "json"
 require "logger"
 
-# NOTE: This is naive implementation, lacks a.o. exponential backoff, rate limiting and robust error handling.
+# NOTE: This is naive implementation, lacks a.o. exponential backoff, rate limiting
+#       and robust error handling (HTTP request, JSON parsing and content accessing).
 
 class RecipeService
   Response = Data.define(:status, :message) do
