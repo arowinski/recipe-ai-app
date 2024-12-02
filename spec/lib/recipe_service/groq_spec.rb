@@ -22,7 +22,7 @@ RSpec.describe RecipeService::Groq do
         )
         .to_return(status: 200, body: {choices: [{message: {content: "recipe"}}]}.to_json)
 
-      response = RecipeService::Groq.ask("potato, tomato")
+      response = described_class.ask("potato, tomato")
 
       expect(response).to be_ok.and have_attributes(message: "recipe")
     end
@@ -32,7 +32,7 @@ RSpec.describe RecipeService::Groq do
         stub_request(:post, described_class::ENDPOINT)
           .to_return(status: 400, body: {choices: [{message: {content: "recipe"}}]}.to_json)
 
-        response = RecipeService::Groq.ask("potato, tomato")
+        response = described_class.ask("potato, tomato")
 
         expect(response).not_to be_ok
       end
@@ -43,7 +43,7 @@ RSpec.describe RecipeService::Groq do
 
         allow(RecipeService::LOGGER).to receive(:error)
 
-        RecipeService::Groq.ask("potato, tomato")
+        described_class.ask("potato, tomato")
 
         expect(RecipeService::LOGGER).to have_received(:error).with({error: "error msg"}.to_json)
       end
@@ -70,7 +70,7 @@ RSpec.describe RecipeService::Groq do
       it "returns true" do
         stub_groq_chat_completions(input: "recipe", status: 200, response_content: "0")
 
-        response = RecipeService::Groq.validate("recipe")
+        response = described_class.validate("recipe")
 
         expect(response).to be(true)
       end
@@ -80,7 +80,7 @@ RSpec.describe RecipeService::Groq do
       it "returns true" do
         stub_groq_chat_completions(input: "recipe", status: 200, response_content: "1")
 
-        response = RecipeService::Groq.validate("recipe")
+        response = described_class.validate("recipe")
 
         expect(response).to be(false)
       end
@@ -90,7 +90,7 @@ RSpec.describe RecipeService::Groq do
       it "returns error response" do
         stub_groq_chat_completions(input: "recipe", status: 400)
 
-        response = RecipeService::Groq.validate("recipe")
+        response = described_class.validate("recipe")
 
         expect(response).to be(false)
       end
@@ -100,7 +100,7 @@ RSpec.describe RecipeService::Groq do
 
         allow(RecipeService::LOGGER).to receive(:error)
 
-        RecipeService::Groq.validate("recipe")
+        described_class.validate("recipe")
 
         expect(RecipeService::LOGGER).to have_received(:error).with(include("error content"))
       end
@@ -110,7 +110,7 @@ RSpec.describe RecipeService::Groq do
       it "returns false" do
         stub_groq_chat_completions(input: "recipe", status: 200, response_content: "valid")
 
-        response = RecipeService::Groq.validate("recipe")
+        response = described_class.validate("recipe")
 
         expect(response).to be(false)
       end

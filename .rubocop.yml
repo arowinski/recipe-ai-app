@@ -9,3 +9,22 @@ inherit_gem:
   standard: config/base.yml
   standard-custom: config/base.yml
   standard-performance: config/base.yml
+
+AllCops:
+  NewCops: enable
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: true
+  Max: 4
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: true
+  Prefixes: 
+       - when
+       - and
