@@ -22,14 +22,14 @@ class RecipeService
 
     def handle_invalid_recipe
       Response.new(
-        status: :error,
+        status: :invalid,
         message: "I'm sorry, We couldn't find a recipe for that combination of ingredients."
       )
     end
 
     def handle_invalid_response
       Response.new(
-        status: :error,
+        status: :service_error,
         message: "We have encountered an error. Please try again later."
       )
     end
